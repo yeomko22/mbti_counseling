@@ -24,7 +24,7 @@ sentry_sdk.init(
 write_page_config()
 write_common_style()
 write_sidebar()
-random_select = "랜덤으로 3개 고르기"
+random_select = "랜덤으로 고르기"
 options = [random_select] + [f"{k} ({MBTI_DICT[k]['persona']})" for k in sorted(MBTI_DICT.keys())]
 
 if "counseling_results" not in st.session_state:
@@ -117,10 +117,11 @@ if submit_button:
         st.error("상담받고 싶은 MBTI 3개를 선택해주세요.")
         st.stop()
     if random_select in selected_mbti_list:
-        selected_mbti_list = random.sample(options[1:], 3)
-        st.success(f"랜덤하게 선택한 {', '.join(selected_mbti_list)} 봇이 고민을 들어줍니다.")
-    else:
-        st.success(f"{', '.join(selected_mbti_list)} 봇이 고민을 들어줍니다.")
+        candidates = [x for x in options if x not in selected_mbti_list]
+        selected_mbti_list.remove(random_select)
+        random_mbti_list = random.sample(candidates, 3 - (len(selected_mbti_list)))
+        selected_mbti_list += random_mbti_list
+    st.success(f"{', '.join(selected_mbti_list)} 봇이 고민을 들어줍니다.")
     st.session_state.counseling_results["results"] = []
     selected_mbti_keys = [x.split(" ")[0] for x in selected_mbti_list]
     for i, mbti in enumerate(selected_mbti_keys):
