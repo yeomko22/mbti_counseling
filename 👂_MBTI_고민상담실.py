@@ -5,9 +5,19 @@ import streamlit as st
 from mbti import MBTI_DICT
 from utils.discord_util import send_discord_message
 from utils.openai_util import request_chat_completion
-from utils.sentry_util import capture_exception_message
-from utils.streamlit_util import write_streaming_response, write_common_style, write_page_config, write_sidebar
+from utils.streamlit_util import write_streaming_response, write_common_style, write_page_config, write_sidebar, nav_page
 from utils.supabase_util import write_data
+import sentry_sdk
+from sentry_sdk import capture_message
+import logging
+
+
+sentry_sdk.init(
+    dsn=st.secrets["SENTRY_KEY"],
+    traces_sample_rate=0.01,
+    profiles_sample_rate=0.01,
+    environment=st.secrets["ENV"]
+)
 
 write_page_config()
 write_common_style()
@@ -98,10 +108,9 @@ def share_form():
                                 "answer": st.session_state.counseling_results
                             }
                         )
-                    st.success("공유 완료! 커뮤니티에서 확인해보세요.", icon="✅")
-                    st.session_state.share_flag = True
+                    nav_page("고민상담_커뮤니티")
                 except Exception as e:
-                    capture_exception_message(e)
+                    logging.error(e)
                     st.error("공유에 실패했습니다. 잠시 뒤에 다시 시도해주세요", icon="😢")
 
 

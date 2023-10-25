@@ -1,10 +1,10 @@
+import logging
 import math
 
 import streamlit as st
 
 from mbti import MBTI_DICT
-from utils.sentry_util import capture_exception_message
-from utils.streamlit_util import write_common_style, write_page_config, write_sidebar
+from utils.streamlit_util import write_common_style, write_page_config, write_sidebar, nav_page
 from utils.supabase_util import count_records, read_page
 
 write_page_config()
@@ -13,6 +13,9 @@ write_sidebar()
 
 st.title("💬 고민상담 커뮤니티")
 st.subheader("MBTI들이 상담해준 결과를 공유해봐요!")
+nav_button = st.button("다시 고민상담하러 가기")
+if nav_button:
+    nav_page(page_name="")
 st.markdown("""
 <style>
 .streamlit-expanderHeader p {
@@ -40,7 +43,7 @@ with st.spinner("고민 상담 데이터를 읽어오고 있습니다..."):
             last_id=(count - pagesize * (st.session_state.page - 1) + 1)
         )
     except Exception as e:
-        capture_exception_message(e)
+        logging.error(e)
         st.error("데이터를 읽어오지 못했습니다. 잠시 뒤에 다시 시도해주세요.")
         st.stop()
 
