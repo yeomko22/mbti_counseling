@@ -103,7 +103,7 @@ def share_form():
                                 "answer": st.session_state.counseling_results
                             }
                         )
-                    nav_page("고민상담_커뮤니티")
+                    nav_page("모두의_고민")
                 except Exception as e:
                     logging.error(e)
                     st.error("공유에 실패했습니다. 잠시 뒤에 다시 시도해주세요", icon="😢")
