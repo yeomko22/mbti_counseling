@@ -1,16 +1,18 @@
+import logging
 import random
 
+import sentry_sdk
 import streamlit as st
 
 from mbti import MBTI_DICT
 from utils.discord_util import send_discord_message
 from utils.openai_util import request_chat_completion
-from utils.streamlit_util import write_streaming_response, write_common_style, write_page_config, write_sidebar, nav_page
+from utils.streamlit_util import nav_page
+from utils.streamlit_util import write_common_style
+from utils.streamlit_util import write_page_config
+from utils.streamlit_util import write_sidebar
+from utils.streamlit_util import write_streaming_response
 from utils.supabase_util import write_data
-import sentry_sdk
-from sentry_sdk import capture_message
-import logging
-
 
 sentry_sdk.init(
     dsn=st.secrets["SENTRY_KEY"],
