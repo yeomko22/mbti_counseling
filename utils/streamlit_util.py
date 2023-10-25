@@ -43,9 +43,6 @@ def write_common_style():
         font-size: 18px;
         font-weight: normal;
     }
-    [data-testid="StyledLinkIconContainer"] svg {
-        visibility: hidden;
-    }
     [data-testid="StyledFullScreenButton"] {
         visibility: hidden;
     }
@@ -64,7 +61,11 @@ def write_common_style():
     header { visibility: hidden; }
     footer { visibility: hidden; }
     #MainMenu { visibility: hidden; }
+    [data-testid="StyledLinkIconContainer"] {
+        pointer-events: none;
+    }
     </style>
+    
     """, unsafe_allow_html=True)
 
 

@@ -22,20 +22,12 @@ auto_complete = st.toggle("예시로 채우기")
 example_mbti = [random_select]
 example_counsel = "썸남과 단둘이 인생네컷을 찍었어! 근데 이거 그린라이트일까...?"
 with st.form("form"):
-    cols = st.columns([0.2, 0.8])
-    with cols[0]:
-        input_text = st.text_input(
-            label="닉네임(선택)",
-            placeholder="익명의 고민러",
-            value="익명의 고민러" if auto_complete else ""
-        )
-    with cols[1]:
-        selected_mbti_list = st.multiselect(
-            label="상담받고 싶은 MBTI들을 3개 골라주세요",
-            options=options,
-            max_selections=3,
-            default=example_mbti if auto_complete else []
-        )
+    selected_mbti_list = st.multiselect(
+        label="상담받고 싶은 MBTI들을 3개 골라주세요",
+        options=options,
+        max_selections=3,
+        default=example_mbti if auto_complete else []
+    )
     input_text = st.text_area(
         label="여러분의 고민거리를 자세히 적어주세요.",
         placeholder=example_counsel,
@@ -44,8 +36,25 @@ with st.form("form"):
     submit_button = st.form_submit_button("제출")
 
 
-def click_share_button():
-    st.toast("공유 완료! 커뮤니티에서 확인해보세요.", icon="✅")
+def share_form():
+    with st.form("share_form", clear_on_submit=True):
+        cols = st.columns([0.2, 0.8])
+        with cols[0]:
+            nickname = st.text_input(
+                label="닉네임(선택)",
+                placeholder="익명의 고민러",
+                value="익명의 고민러"
+            )
+        with cols[1]:
+            comment = st.text_input(
+                label="댓글",
+                placeholder="ENFP 봇의 조언이 도움이 됐어요!"
+            )
+        share_submit = st.form_submit_button(
+            "💬 커뮤니티에 공유하기",
+        )
+        if share_submit:
+            st.toast("공유 완료! 커뮤니티에서 확인해보세요.", icon="✅")
 
 
 if submit_button:
@@ -74,7 +83,8 @@ if submit_button:
         prompt = f"""
 당신의 직업, 성격, 고민을 들어줄 때의 특징을 참고하여 유저의 고민을 상담해주세요.
 반드시 반말로 친근하게 작성해주세요.
-반드시 80자 이상 120자 이내로 간결하게 작성해주세요.
+반드시 80자 이상 작성해주세요.
+반드시 100자 이내로 작성해주세요.
 이모지를 적절하게 사용해주세요.
 ---
 유저의 고민: {input_text}
@@ -94,10 +104,7 @@ if submit_button:
                     "mbti": mbti,
                     "message": message
                 }
-    share_button = st.button(
-        label="💬 커뮤니티에 결과 공유하기",
-        on_click=click_share_button
-    )
+    share_form()
     st.stop()
 
 if st.session_state.counseling_results[0]:
@@ -113,7 +120,4 @@ if st.session_state.counseling_results[0]:
             st.image(f"./images/profile/{mbti}.png")
         with col2:
             st.markdown(message)
-    share_button = st.button(
-        label="💬 커뮤니티에 결과 공유하기",
-        on_click=click_share_button
-    )
+    share_form()
