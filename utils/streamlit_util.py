@@ -84,6 +84,13 @@ def write_common_style():
     section[data-testid="stSidebar"] {
         width: 200px !important;
     }
+    [data-baseweb="popover"] li.st-g8 {
+        visibility: hidden;
+    }
+    [data-baseweb="popover"] li.st-g8:before {
+        content: "3개를 모두 선택했습니다!";
+        visibility: visible;
+    }
     </style>
     """, unsafe_allow_html=True)
 
