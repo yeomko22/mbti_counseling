@@ -29,11 +29,6 @@ options = [random_select] + [f"{k} ({MBTI_DICT[k]['persona']})" for k in sorted(
 
 if "counseling_results" not in st.session_state:
     st.session_state.counseling_results = {"results": []}
-if "page" in st.session_state:
-    del st.session_state["page"]
-if "share_flag" not in st.session_state:
-    st.session_state.share_flag = False
-
 
 st.title("👂 MBTI 고민 상담실")
 st.subheader("서로 다른 MBTI를 가진 AI들이 여러분들의 고민을 상담해줍니다!")
@@ -89,9 +84,7 @@ def share_form():
             "💬 커뮤니티에 공유하기",
         )
         if share_submit:
-            if st.session_state.share_flag:
-                st.error("같은 상담 결과는 한번만 공유할 수 있습니다.")
-            elif not nickname:
+            if not nickname:
                 st.error("닉네임을 입력해주세요.")
             elif not counseling_type:
                 st.error("고민 종류를 선택해주세요.")
@@ -117,7 +110,6 @@ def share_form():
 
 
 if submit_button:
-    st.session_state.share_flag = False
     if len(question) == 0:
         st.error("고민거리를 입력해주세요")
         st.stop()
