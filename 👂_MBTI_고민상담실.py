@@ -5,6 +5,7 @@ import streamlit as st
 from mbti import MBTI_DICT
 from utils.openai_util import request_chat_completion
 from utils.streamlit_util import write_streaming_response, write_common_style, write_page_config
+from utils.supabase_util import write_couseling
 
 write_page_config()
 write_common_style()
@@ -12,7 +13,7 @@ random_select = "랜덤으로 3개 고르기"
 options = [random_select] + [f"{k} ({MBTI_DICT[k]['persona']})" for k in sorted(MBTI_DICT.keys())]
 
 if "counseling_results" not in st.session_state:
-    st.session_state.counseling_results = [None, None, None]
+    st.session_state.counseling_results = {"results": []}
 
 st.title("👂 MBTI 고민 상담실")
 st.subheader("서로 다른 MBTI를 가진 AI들이 여러분들의 고민을 상담해줍니다!")
@@ -28,7 +29,7 @@ with st.form("form"):
         max_selections=3,
         default=example_mbti if auto_complete else []
     )
-    input_text = st.text_area(
+    question = st.text_area(
         label="여러분의 고민거리를 자세히 적어주세요.",
         placeholder=example_counsel,
         value=example_counsel if auto_complete else ""
@@ -37,28 +38,45 @@ with st.form("form"):
 
 
 def share_form():
+    st.markdown("")
+    st.markdown("**결과가 마음에 드시나요? 커뮤니티에 공유하고, 다른 사람들의 고민도 살펴보세요!**")
     with st.form("share_form", clear_on_submit=True):
         cols = st.columns([0.2, 0.8])
         with cols[0]:
             nickname = st.text_input(
                 label="닉네임(선택)",
                 placeholder="익명의 고민러",
-                value="익명의 고민러"
             )
         with cols[1]:
             comment = st.text_input(
-                label="댓글",
+                label="댓글(선택)",
                 placeholder="ENFP 봇의 조언이 도움이 됐어요!"
             )
         share_submit = st.form_submit_button(
             "💬 커뮤니티에 공유하기",
         )
         if share_submit:
-            st.toast("공유 완료! 커뮤니티에서 확인해보세요.", icon="✅")
+            if not nickname:
+                nickname = "익명의 고민러"
+            if not comment:
+                comment = "도움이 많이 됐어요!"
+            try:
+                write_couseling(
+                    target_table="counseling",
+                    data={
+                        "nickname": nickname,
+                        "comment": comment,
+                        "question": question,
+                        "answer": st.session_state.counseling_results
+                    }
+                )
+                st.success("공유 완료! 커뮤니티에서 확인해보세요.", icon="✅")
+            except Exception as e:
+                st.error("공유에 실패했습니다. 잠시 뒤에 다시 시도해주세요", icon="😢")
 
 
 if submit_button:
-    if len(input_text) == 0:
+    if len(question) == 0:
         st.error("고민거리를 입력해주세요")
         st.stop()
     if len(selected_mbti_list) != 3 and random_select not in selected_mbti_list:
@@ -69,6 +87,7 @@ if submit_button:
         st.success(f"랜덤하게 선택한 {', '.join(selected_mbti_list)} 봇이 고민을 들어줍니다.")
     else:
         st.success(f"{', '.join(selected_mbti_list)} 봇이 고민을 들어줍니다.")
+    st.session_state.counseling_results["results"] = []
     selected_mbti_keys = [x.split(" ")[0] for x in selected_mbti_list]
     for i, mbti in enumerate(selected_mbti_keys):
         persona = MBTI_DICT[mbti]["persona"]
@@ -87,7 +106,7 @@ if submit_button:
 반드시 100자 이내로 작성해주세요.
 이모지를 적절하게 사용해주세요.
 ---
-유저의 고민: {input_text}
+유저의 고민: {question}
 ---
         """
         with st.expander(f"**{mbti} - {character}**", expanded=True):
@@ -100,24 +119,24 @@ if submit_button:
                     messages=[{"role": "user", "content": prompt}]
                 )
                 message = write_streaming_response(response)
-                st.session_state.counseling_results[i] = {
+                st.session_state.counseling_results["results"].append({
                     "mbti": mbti,
                     "message": message
-                }
+                })
     share_form()
     st.stop()
 
-if st.session_state.counseling_results[0]:
-    for counseling_result in st.session_state.counseling_results:
-        if not counseling_result:
-            continue
-        mbti = counseling_result["mbti"]
-        message = counseling_result["message"]
-        character = MBTI_DICT[mbti]["character"]
-        with st.expander(f"**{mbti} - {character}**", expanded=True):
-            col1, col2 = st.columns([0.25, 0.75])
-        with col1:
-            st.image(f"./images/profile/{mbti}.png")
-        with col2:
-            st.markdown(message)
-    share_form()
+if not st.session_state.counseling_results["results"]:
+    st.stop()
+
+for counseling_result in st.session_state.counseling_results["results"]:
+    mbti = counseling_result["mbti"]
+    message = counseling_result["message"]
+    character = MBTI_DICT[mbti]["character"]
+    with st.expander(f"**{mbti} - {character}**", expanded=True):
+        col1, col2 = st.columns([0.25, 0.75])
+    with col1:
+        st.image(f"./images/profile/{mbti}.png")
+    with col2:
+        st.markdown(message)
+share_form()
