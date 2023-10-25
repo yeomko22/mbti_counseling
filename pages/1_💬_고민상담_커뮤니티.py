@@ -25,6 +25,10 @@ st.markdown("""
     font-weight: bold;
     font-size: 20px;
 }
+[data-testid="stButton"] {
+    display: flex;
+    justify-content: center;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -82,7 +86,7 @@ def change_page():
 
 
 cols = st.columns(3)
-with cols[0]:
+with cols[1]:
     st.selectbox(
         label="페이지",
         label_visibility="collapsed",
