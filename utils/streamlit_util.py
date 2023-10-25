@@ -83,3 +83,13 @@ def clear_session_state(cur_chapter: str = None):
         if k == cur_chapter:
             continue
         del st.session_state[k]
+
+
+def write_sidebar():
+    with st.sidebar:
+        st.markdown("Powered by gpt-3.5-turbo")
+        st.markdown("""
+        **Youtube**: [퍼스트펭귄 코딩스쿨](https://www.youtube.com/channel/UCUFk9scQ-SqP993DRC4z_fA)  
+        **Blog**: https://blog.firstpenguine.school   
+        **Email**: hyeongjun.kim@firstpenguine.school
+        """)

@@ -6,11 +6,12 @@ from mbti import MBTI_DICT
 from utils.discord_util import send_discord_message
 from utils.openai_util import request_chat_completion
 from utils.sentry_util import capture_exception_message
-from utils.streamlit_util import write_streaming_response, write_common_style, write_page_config
+from utils.streamlit_util import write_streaming_response, write_common_style, write_page_config, write_sidebar
 from utils.supabase_util import write_data
 
 write_page_config()
 write_common_style()
+write_sidebar()
 random_select = "랜덤으로 3개 고르기"
 options = [random_select] + [f"{k} ({MBTI_DICT[k]['persona']})" for k in sorted(MBTI_DICT.keys())]
 
