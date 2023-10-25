@@ -65,7 +65,7 @@ def write_common_style():
         pointer-events: none;
     }
     img {
-        max-height: 200px;
+        max-height: 250px;
     }
     </style>
     """, unsafe_allow_html=True)
