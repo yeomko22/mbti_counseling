@@ -1,6 +1,6 @@
+import sentry_sdk
 import streamlit as st
 from sentry_sdk import capture_message
-import sentry_sdk
 
 
 def init_sentry():
