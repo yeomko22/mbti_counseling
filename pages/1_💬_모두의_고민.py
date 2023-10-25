@@ -11,7 +11,7 @@ write_page_config()
 write_common_style()
 write_sidebar()
 
-st.title("💬 고민상담 커뮤니티")
+st.title("💬 모두의 고민")
 st.subheader("MBTI들이 상담해준 결과를 공유해봐요!")
 nav_button = st.button("다시 고민상담하러 가기")
 if nav_button:
