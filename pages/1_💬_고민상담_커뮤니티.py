@@ -35,12 +35,10 @@ pagesize = 10
 with st.spinner("고민 상담 데이터를 읽어오고 있습니다..."):
     try:
         count = count_records(target_table="counseling")
-        print("count", count)
         data = read_page(
             target_table="counseling",
             last_id=(count - pagesize * (st.session_state.page - 1) + 1)
         )
-        print("data", data)
     except Exception as e:
         capture_exception_message(e)
         st.error("데이터를 읽어오지 못했습니다. 잠시 뒤에 다시 시도해주세요.")
