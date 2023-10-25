@@ -64,13 +64,22 @@ def write_common_style():
     [data-testid="StyledLinkIconContainer"] {
         pointer-events: none;
     }
+    img {
+        max-height: 200px;
+    }
     </style>
-    
     """, unsafe_allow_html=True)
 
 
 def write_page_config():
     st.set_page_config(
         page_icon="👂",
-        page_title="MBTI 고민상담실"
+        page_title="MBTI 고민상담실",
     )
+
+
+def clear_session_state(cur_chapter: str = None):
+    for k in st.session_state.keys():
+        if k == cur_chapter:
+            continue
+        del st.session_state[k]
