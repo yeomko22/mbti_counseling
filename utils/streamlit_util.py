@@ -76,6 +76,7 @@ def write_page_config():
     st.set_page_config(
         page_icon="👂",
         page_title="MBTI 고민상담실",
+        initial_sidebar_state="collapsed"
     )
 
 
