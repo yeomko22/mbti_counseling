@@ -22,9 +22,9 @@ def write_sidebar():
         st.markdown("")
         st.markdown("Powered by gpt-3.5-turbo")
         st.markdown("""
-    **Youtube**: [퍼스트펭귄 코딩스쿨](https://www.youtube.com/channel/UCUFk9scQ-SqP993DRC4z_fA)  
-    **Blog**: https://blog.firstpenguine.school   
-    **Email**: hyeongjun.kim@firstpenguine.school
+    [📺 퍼펭스쿨 유튜브](https://www.youtube.com/channel/UCUFk9scQ-SqP993DRC4z_fA)  
+    [✍️ 퍼펭스쿨 블로그](https://blog.firstpenguine.school)
+    [✉️ 이메일](hyeongjun.kim@firstpenguine.school)
     """)
 
 
@@ -68,6 +68,22 @@ def write_common_style():
     img {
         max-height: 250px;
     }
+    [data-testid="stSidebarUserContent"] {
+        padding: 1em;
+    }
+    [data-testid="stSidebarUserContent"] .block-container {
+        padding: 0;
+    }
+    [data-testid="stMarkdownContainer"] a {
+        text-decoration: none;
+        color: black;
+    }
+    [data-testid="stMarkdownContainer"] a:hover {
+        color: #FF4B4B;
+    }
+    section[data-testid="stSidebar"] {
+        width: 200px !important;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -91,10 +107,10 @@ def write_sidebar():
     with st.sidebar:
         st.markdown("Powered by gpt-3.5-turbo")
         st.markdown("""
-        **Youtube**: [퍼스트펭귄 코딩스쿨](https://www.youtube.com/channel/UCUFk9scQ-SqP993DRC4z_fA)  
-        **Blog**: https://blog.firstpenguine.school   
-        **Email**: hyeongjun.kim@firstpenguine.school
-        """)
+[📺 퍼펭스쿨 유튜브](https://www.youtube.com/channel/UCUFk9scQ-SqP993DRC4z_fA)  
+[✍️ 퍼펭스쿨 블로그](https://blog.firstpenguine.school)  
+[✉️ 이메일](hyeongjun.kim@firstpenguine.school)  
+         """)
 
 
 def nav_page(page_name: str, timeout_secs: int = 3):
