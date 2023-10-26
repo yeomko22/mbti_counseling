@@ -149,15 +149,19 @@ if submit_button:
             with col1:
                 st.image(f"./images/profile/{mbti}.png")
             with col2:
-                response = request_chat_completion(
-                    system_role=system_role,
-                    messages=[{"role": "user", "content": prompt}]
-                )
-                message = write_streaming_response(response)
-                st.session_state.counseling_results["results"].append({
-                    "mbti": mbti,
-                    "message": message
-                })
+                try:
+                    response = request_chat_completion(
+                        system_role=system_role,
+                        messages=[{"role": "user", "content": prompt}]
+                    )
+                    message = write_streaming_response(response)
+                    st.session_state.counseling_results["results"].append({
+                        "mbti": mbti,
+                        "message": message
+                    })
+                except Exception as e:
+                    logging.error(e)
+                    st.error("대화를 생성하는데 실패했습니다. 잠시 뒤에 다시 시도해주세요 🙇")
     send_discord_message(
         message_type="mbti 고민상담",
         message=f"고민: {question}"

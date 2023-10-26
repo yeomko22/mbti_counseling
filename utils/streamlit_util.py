@@ -130,7 +130,6 @@ def nav_page(page_name: str, timeout_secs: int = 3):
                     uri = links[i].href.split("/").slice(-1)[0];
                     decoded_uri = decodeURI(uri);
                     const result = collator.compare(decoded_uri, page_name);
-                    console.log("decoded", decoded_uri, "page_name", page_name);
                     if (result === 0) {
                         links[i].click();
                         return;
