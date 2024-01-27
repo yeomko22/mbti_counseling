@@ -166,7 +166,6 @@ if submit_button:
         message_type="mbti 고민상담",
         message=f"고민: {question}"
     )
-    share_form()
     st.stop()
 
 if not st.session_state.counseling_results["results"]:
