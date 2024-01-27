@@ -9,7 +9,7 @@ def request_chat_completion(messages, system_role=None):
     if system_role:
         messages = [{"role": "system", "content": system_role}] + messages
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4-0125-preview",
         messages=messages,
         stream=True,
         timeout=3
