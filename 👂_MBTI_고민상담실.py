@@ -182,4 +182,4 @@ for counseling_result in st.session_state.counseling_results["results"]:
         st.image(f"./images/profile/{mbti}.png")
     with col2:
         st.markdown(message)
-share_form()
+
