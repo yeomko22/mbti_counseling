@@ -39,7 +39,7 @@ def write_common_style():
         border-radius: 50%;
         border: 1px solid #d2d2d2;
         filter: drop-shadow(3px 3px 5px #d2d2d2);
-        max-width: 150px;
+        max-height: 180px;
     }
     h1 {
         text-align: center;
