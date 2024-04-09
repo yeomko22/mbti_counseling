@@ -3,17 +3,18 @@ from streamlit.components.v1 import html
 
 
 def write_streaming_response(response):
+    content = ""
     placeholder = st.empty()
-    message = ""
-    for chunk in response:
-        delta = chunk.choices[0]["delta"]
-        if "content" in delta:
-            message += delta["content"]
-            placeholder.markdown(message + "▌")
-        else:
-            break
-    placeholder.markdown(message)
-    return message
+    for part in response:
+        if isinstance(part, str) or not part.id:
+            continue
+        delta = part.choices[0].delta
+        if delta.content:
+            content += delta.content
+            placeholder.markdown(content + "▌")
+    placeholder.markdown(content)
+    return content
+
 
 
 def write_sidebar():

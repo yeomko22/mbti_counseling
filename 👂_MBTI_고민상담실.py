@@ -7,12 +7,10 @@ import streamlit as st
 from mbti import MBTI_DICT
 from utils.discord_util import send_discord_message
 from utils.openai_util import request_chat_completion
-from utils.streamlit_util import nav_page
 from utils.streamlit_util import write_common_style
 from utils.streamlit_util import write_page_config
 from utils.streamlit_util import write_sidebar
 from utils.streamlit_util import write_streaming_response
-from utils.supabase_util import write_data
 
 sentry_sdk.init(
     dsn=st.secrets["SENTRY_KEY"],
@@ -52,63 +50,6 @@ with st.form("form"):
     submit_button = st.form_submit_button("제출")
 
 
-def share_form():
-    st.markdown("")
-    st.markdown("**결과가 마음에 드시나요? 커뮤니티에 공유하고, 다른 사람들의 고민도 살펴보세요!**")
-    with st.form("share_form", clear_on_submit=True):
-        cols = st.columns([0.5, 0.5])
-        with cols[0]:
-            nickname = st.text_input(
-                label="닉네임",
-                placeholder="익명의 고민러",
-            )
-        with cols[1]:
-            counseling_type = st.selectbox(
-                label="고민 종류",
-                options=[
-                    "❤️ 연애 상담",
-                    "🧑‍💼 직장 생활",
-                    "✏️ 학업 고민",
-                    "👨‍👨‍👧‍👧 사람 관계",
-                    "💵 금전 문제",
-                    "💊 건강 관리",
-                    "🗓️ 일상 생활",
-                    "💭 그 외 고민"
-                ]
-            )
-        comment = st.text_area(
-            label="고민 작성자의 의견",
-            placeholder="ENFP 봇의 조언이 도움이 됐어요!"
-        )
-        share_submit = st.form_submit_button(
-            "💬 커뮤니티에 공유하기",
-        )
-        if share_submit:
-            if not nickname:
-                st.error("닉네임을 입력해주세요.")
-            elif not counseling_type:
-                st.error("고민 종류를 선택해주세요.")
-            elif not comment:
-                st.error("의견을 입력해주세요.")
-            else:
-                try:
-                    with st.spinner("상담 결과를 공유 중..."):
-                        write_data(
-                            target_table="counseling",
-                            data={
-                                "nickname": nickname,
-                                "counseling_type": counseling_type,
-                                "comment": comment,
-                                "question": question,
-                                "answer": st.session_state.counseling_results
-                            }
-                        )
-                    nav_page("모두의_고민")
-                except Exception as e:
-                    logging.error(e)
-                    st.error("공유에 실패했습니다. 잠시 뒤에 다시 시도해주세요", icon="😢")
-
-
 if submit_button:
     if len(question) == 0:
         st.error("고민거리를 입력해주세요")
@@ -137,7 +78,7 @@ if submit_button:
         prompt = f"""
 당신의 직업, 성격, 고민을 들어줄 때의 특징을 참고하여 유저의 고민을 상담해주세요.
 반드시 반말로 친근하게 작성해주세요.
-반드시 100단어 이내로 간결하게 작성해주세요.
+반드시 100단어 이내로 작성해주세요.
 자신에 대한 소개는 하지 마세요.
 이모지를 적절하게 사용해주세요.
 ---
@@ -181,4 +122,3 @@ for counseling_result in st.session_state.counseling_results["results"]:
         st.image(f"./images/profile/{mbti}.png")
     with col2:
         st.markdown(message)
-
