@@ -33,7 +33,7 @@ def write_common_style():
     st.markdown("""
     <style>
     [data-testid="stAppViewBlockContainer"] {
-        padding: 1rem 0rem 0rem 5rem;
+        padding: 1rem 0rem 5rem 0rem;
     }
     [data-testid="column"] img {
         border-radius: 50%;
