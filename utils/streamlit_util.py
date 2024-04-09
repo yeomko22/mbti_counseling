@@ -32,6 +32,9 @@ def write_sidebar():
 def write_common_style():
     st.markdown("""
     <style>
+    [data-testid="stAppViewBlockContainer"] {
+        padding: 1rem 0rem 0rem 0rem;
+    }
     [data-testid="column"] img {
         border-radius: 50%;
         border: 1px solid #d2d2d2;
